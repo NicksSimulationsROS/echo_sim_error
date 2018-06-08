@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- This example uses predefined waypoint locations, entered as GPS locations. -->
+<launch>
+
+  <!-- Creates a Jackal in Gazebo. -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="false"/>
+    <arg name="world_name"   value="$(find multi_jackal_tutorials)/worlds/empty.world"/>
+  </include>
+  <!-- Jackal0 has GPS. -->
+  <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
+    <arg name="ns"             value="jackal0"/>
+    <arg name="x"              value="50.5"/>
+    <arg name="y"              value="6.5"/>
+    <arg name="use_global_tf"  value="false"/>
+    <arg name="use_global_ekf" value="true"/>
+  </include>
+
+  <node ns="jackal0" pkg="echo_sim_error" type="echo_sim_error.py" name="echo_sim_error" output="screen">
+    <param name="model_name" value="jackal0"/>
+    <remap from="model_states"  to="/gazebo/model_states"/>
+    <remap from="odometry"      to="odometry/global_filtered"/>
+  </node>
+
+</launch>
